@@ -140,14 +140,16 @@ export async function joinWaitlistAction(
       const newPosition = currentTotalCount + 1;
 
       // 4. Handle referral increment if valid
+      let verifiedReferredByCode: string | null = null;
       if (referredByCode) {
         const { data: referrer } = await supabase
           .from("waitlist")
-          .select("id, referral_count, position")
+          .select("id, referral_code, referral_count, position")
           .eq("referral_code", referredByCode)
           .maybeSingle();
 
         if (referrer) {
+          verifiedReferredByCode = referrer.referral_code || referredByCode;
           const newRefPos = Math.max(1, referrer.position - 5);
           await supabase
             .from("waitlist")
@@ -167,7 +169,7 @@ export async function joinWaitlistAction(
           email,
           handle: handle || `member_${newPosition}`,
           referral_code: generatedRefCode,
-          referred_by_code: referredByCode,
+          referred_by_code: verifiedReferredByCode,
           referral_count: 0,
           position: newPosition,
           roll_capacity_preference: rollPreference,
