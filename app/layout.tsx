@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -67,10 +68,18 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col bg-[#F9F6F0] text-[#1A1815] antialiased selection:bg-[#C86428] selection:text-white overflow-x-hidden w-full max-w-full relative">
         <WaitlistProvider>
-          <Navbar />
-          <main className="flex-1 pt-32 sm:pt-40 overflow-x-hidden w-full max-w-full">{children}</main>
+          <Suspense fallback={null}>
+            <Navbar />
+          </Suspense>
+          <main className="flex-1 pt-32 sm:pt-40 overflow-x-hidden w-full max-w-full">
+            <Suspense fallback={<div className="py-24 text-center text-xs font-mono-mechanical text-[#6E675F]">Loading...</div>}>
+              {children}
+            </Suspense>
+          </main>
           <Footer />
-          <ReferralModal />
+          <Suspense fallback={null}>
+            <ReferralModal />
+          </Suspense>
         </WaitlistProvider>
       </body>
     </html>
