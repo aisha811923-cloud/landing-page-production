@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Aperture, Sparkles, Film, ArrowUpRight, Heart } from "lucide-react";
+import { Aperture, Sparkles, Film, ArrowUpRight, Heart, Shield, FileText, Mail } from "lucide-react";
 import { useWaitlist } from "@/context/WaitlistContext";
 
 export default function Footer() {
@@ -18,9 +18,9 @@ export default function Footer() {
       </div>
 
       <div className="max-w-6xl mx-auto pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-[#E8E1D3]">
-          {/* Brand Manifesto & Philosophy */}
-          <div className="md:col-span-5 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-[#E8E1D3]">
+          {/* Brand Column */}
+          <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-[#1A1815] text-[#C5A870] flex items-center justify-center shadow-inner">
                 <Aperture className="w-4 h-4" />
@@ -29,13 +29,13 @@ export default function Footer() {
                 EMULSION
               </span>
             </div>
-            <p className="font-serif-display italic text-lg text-[#1A1815] leading-snug">
-              &ldquo;Slow down. Shoot blind. Feel the anticipation.&rdquo;
+            <p className="font-serif-display italic text-base text-[#1A1815] leading-snug">
+              &ldquo;The Analog Social Club.&rdquo;
             </p>
-            <p className="text-sm text-[#6E675F] max-w-sm leading-relaxed">
+            <p className="text-xs text-[#6E675F] max-w-sm leading-relaxed">
               The anti-instant camera for authentic analog social clubs. No previews, no deletes, no staged performance—just the raw magic of 35mm film rolls co-shot with friends.
             </p>
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex items-center gap-2 pt-1">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFFFFF] border border-[#E8E1D3] text-[10px] font-mono-mechanical text-[#6E675F]">
                 <Film className="w-3 h-3 text-[#C86428]" />
                 KODAK 35MM EMULATION
@@ -46,12 +46,12 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Site Navigation Links */}
-          <div className="md:col-span-3 space-y-3">
+          {/* Club Navigation Column */}
+          <div className="md:col-span-2 space-y-3">
             <h4 className="font-mono-mechanical text-xs uppercase tracking-widest text-[#9C9488]">
-              Navigation
+              Club
             </h4>
-            <ul className="space-y-2 text-sm text-[#6E675F]">
+            <ul className="space-y-2 text-xs font-mono-mechanical text-[#6E675F]">
               <li>
                 <Link
                   href="/"
@@ -65,7 +65,7 @@ export default function Footer() {
                   href="/experience"
                   className="hover:text-[#1A1815] transition-colors inline-flex items-center gap-1"
                 >
-                  The Experience & Mechanics
+                  The Experience
                 </Link>
               </li>
               <li>
@@ -79,22 +79,58 @@ export default function Footer() {
               <li>
                 <button
                   onClick={openModal}
-                  className="hover:text-[#C86428] font-medium transition-colors inline-flex items-center gap-1 text-[#1A1815]"
+                  className="hover:text-[#C86428] font-semibold transition-colors inline-flex items-center gap-1 text-[#1A1815] cursor-pointer"
                 >
-                  VIP Handle Reservation
+                  Reserve Handle
                   <ArrowUpRight className="w-3 h-3" />
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Founding Team & Movement */}
-          <div className="md:col-span-4 space-y-4">
+          {/* Legal Column */}
+          <div className="md:col-span-3 space-y-3">
             <h4 className="font-mono-mechanical text-xs uppercase tracking-widest text-[#9C9488]">
-              Founding Collective
+              Legal & Compliance
+            </h4>
+            <ul className="space-y-2 text-xs font-mono-mechanical text-[#6E675F]">
+              <li>
+                <Link
+                  href="/privacy"
+                  className="hover:text-[#1A1815] transition-colors inline-flex items-center gap-1.5"
+                >
+                  <Shield className="w-3 h-3 text-[#15803D]" />
+                  <span>Privacy Policy</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="hover:text-[#1A1815] transition-colors inline-flex items-center gap-1.5"
+                >
+                  <FileText className="w-3 h-3 text-[#C86428]" />
+                  <span>Terms of Service</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="hover:text-[#1A1815] transition-colors inline-flex items-center gap-1.5"
+                >
+                  <Mail className="w-3 h-3 text-[#C5A870]" />
+                  <span>Contact Support Desk</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Connect & Early Access Column */}
+          <div className="md:col-span-3 space-y-4">
+            <h4 className="font-mono-mechanical text-xs uppercase tracking-widest text-[#9C9488]">
+              Connect
             </h4>
             <p className="text-xs text-[#6E675F] leading-relaxed">
-              Crafted with intention by Mohammed Hamza, Aritra Jana, Vinay Dama, and Heeransh Ameta.
+              Founding collective: Mohammed Hamza, Aritra Jana, Vinay Dama, and Heeransh Ameta.
             </p>
             <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#E8E1D3] shadow-xs space-y-2">
               <div className="flex items-center justify-between text-xs font-mono-mechanical">
@@ -103,7 +139,7 @@ export default function Footer() {
               </div>
               <button
                 onClick={openModal}
-                className="w-full py-2.5 rounded-xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-xs"
+                className="w-full py-2.5 rounded-xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 Reserve Early Pass
@@ -114,8 +150,8 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#9C9488] font-mono-mechanical">
-          <div className="flex items-center gap-1">
-            <span>© {new Date().getFullYear()} EMULSION INC.</span>
+          <div className="flex items-center gap-1 flex-wrap justify-center sm:justify-start">
+            <span>© {new Date().getFullYear()} EMULSION CLUB INC.</span>
             <span>•</span>
             <span>ALL RIGHTS RESERVED</span>
           </div>
