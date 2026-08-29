@@ -27,6 +27,9 @@ const jetbrains = JetBrains_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "EMULSION • The Analog Social Club & Shared Camera Rolls",
   description:

@@ -6,6 +6,9 @@ import ContactSheet3D from "@/components/home/ContactSheet3D";
 import ScrapbookPreview from "@/components/home/ScrapbookPreview";
 import WaitlistSection from "@/components/home/WaitlistSection";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function HomePage() {
   return (
     <div className="space-y-4">

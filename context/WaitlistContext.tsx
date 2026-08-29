@@ -46,7 +46,7 @@ export function WaitlistProvider({ children }: { children: React.ReactNode }) {
           setClaimedCount(count);
         } else {
           // Fallback to API route if direct query encounters policy issue
-          const res = await fetch("/api/waitlist");
+          const res = await fetch("/api/waitlist", { cache: "no-store" });
           const data = await res.json();
           if (typeof data?.claimedPasses === "number") {
             setClaimedCount(data.claimedPasses);
@@ -61,18 +61,18 @@ export function WaitlistProvider({ children }: { children: React.ReactNode }) {
 
     fetchExactCount();
 
-    // 3. Subscribe to Realtime Supabase PostgreSQL changes (INSERT on waitlist table)
+    // 3. Subscribe to Realtime Supabase PostgreSQL changes (ALL events on waitlist table)
     const channel = supabase
-      .channel("public:waitlist_counter")
+      .channel("realtime-waitlist-sync")
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "waitlist",
         },
         () => {
-          setClaimedCount((prev) => prev + 1);
+          fetchExactCount();
         }
       )
       .subscribe();

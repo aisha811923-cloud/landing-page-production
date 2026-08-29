@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FileText, Sparkles, Copyright, AlertTriangle, Scale, ArrowLeft, Shield } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Terms and Conditions • EMULSION Analog Club",
   description:

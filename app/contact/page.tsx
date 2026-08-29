@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import { submitContactAction, ContactActionResult } from "@/app/actions/contact";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function ContactPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

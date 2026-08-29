@@ -19,6 +19,9 @@ import {
 import { ROLL_TIERS } from "@/lib/constants";
 import { useWaitlist } from "@/context/WaitlistContext";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function ExperiencePage() {
   const { openModal } = useWaitlist();
 

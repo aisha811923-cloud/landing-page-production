@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ShieldCheck, Lock, EyeOff, Server, Trash2, Mail, ArrowLeft, FileText } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Privacy Policy • EMULSION Analog Club",
   description:
