@@ -1,0 +1,12 @@
+# .cursorrules - EMULSION Guidelines
+
+- **Framework:** Next.js 15 App Router (TypeScript, React 19).
+- **Styling:** Tailwind CSS v4 with Warm Archival Linen theme variables.
+- **Icons:** `lucide-react`.
+- **Motion:** `framer-motion` & `canvas-confetti`.
+- **Database:** Supabase Client (`@supabase/supabase-js`).
+- **Color Rules:**
+  - Canvas: `bg-[#F9F6F0]`
+  - Cards: `bg-[#FFFFFF]` with `border-[#E8E1D3]`
+  - Accents: `bg-[#C86428]`, `text-[#C86428]`, `border-[#C5A870]`
+  - Typography: `text-[#1A1815]`, `text-[#6E675F]`
