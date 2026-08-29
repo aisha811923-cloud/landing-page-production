@@ -94,7 +94,7 @@ export default function Footer() {
               Founding Collective
             </h4>
             <p className="text-xs text-[#6E675F] leading-relaxed">
-              Crafted with intention by Mohammed Hamza, Aditir Jana, Vinay, and Hiransh Ameta.
+              Crafted with intention by Mohammed Hamza, Aritra Jana, Vinay Dama, and Heeransh Ameta.
             </p>
             <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#E8E1D3] shadow-xs space-y-2">
               <div className="flex items-center justify-between text-xs font-mono-mechanical">

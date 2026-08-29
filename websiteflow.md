@@ -61,9 +61,9 @@
    - *Shared Keepsakes:* Keep memories with friends, not algorithms.
 4. **Founding Team Bio Grid:**
    - Mohammed Hamza (Founder & CEO)
-   - Aditir Jana (Head of Creative & Research)
-   - Vinay (Head of Marketing & Brand Outreach)
-   - Hiransh Ameta (Founding Member & Community Experience)
+   - Aritra Jana (Head of Creative & Research)
+   - Vinay Dama (Head of Marketing & Brand Outreach)
+   - Heeransh Ameta (Founding Member & Community Experience)
 5. **Bottom CTA Banner:** *"Claim Your Founding Member Pass"*.
 
 ---

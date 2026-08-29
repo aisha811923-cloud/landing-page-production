@@ -68,12 +68,12 @@ We decided to bring that feeling back. EMULSION was born to replace screen anxie
 │ Mohammed Hamza          │ Founder & CEO                                               │
 │                         │ Product vision, systems architecture, and core execution.   │
 ├─────────────────────────┼─────────────────────────────────────────────────────────────┤
-│ Aditir Jana             │ Head of Creative & Research                                 │
+│ Aritra Jana             │ Head of Creative & Research                                 │
 │                         │ User research, film aesthetics, and tactile UX design.      │
 ├─────────────────────────┼─────────────────────────────────────────────────────────────┤
-│ Vinay                   │ Head of Marketing & Brand Outreach                          │
+│ Vinay Dama              │ Head of Marketing & Brand Outreach                          │
 │                         │ Viral growth loops, marketing campaigns, and partnerships.  │
 ├─────────────────────────┼─────────────────────────────────────────────────────────────┤
-│ Hiransh Ameta           │ Founding Member & Community Experience                      │
+│ Heeransh Ameta          │ Founding Member & Community Experience                      │
 │                         │ Early access testing, user feedback, and culture grounding. │
 └─────────────────────────┴─────────────────────────────────────────────────────────────┘

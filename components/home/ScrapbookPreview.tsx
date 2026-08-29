@@ -19,7 +19,7 @@ const PINNED_MEMORIES = [
     id: 2,
     title: "Vintage Market Find",
     image: "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?auto=format&fit=crop&w=600&q=80",
-    contributor: "aditir",
+    contributor: "aritra",
     note: "Found an original Olympus OM-1 for $40!",
     rotation: "md:rotate-2",
     tapeColor: "bg-[#D6CCA8]/70",

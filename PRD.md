@@ -73,6 +73,6 @@ Interactive dial updating visual presets dynamically:
 | Name | Role | Responsibilities |
 |---|---|---|
 | **Mohammed Hamza** | Founder & CEO | Product architecture, vision, and core execution. |
-| **Aditir Jana** | Head of Creative & Research | Vintage film aesthetics, user research, and tactile UX. |
-| **Vinay** | Head of Marketing & Brand Outreach | Viral growth loops, marketing campaigns, and partnerships. |
-| **Hiransh Ameta** | Founding Member & Community Experience | Community testing, early feedback, and culture grounding. |
+| **Aritra Jana** | Head of Creative & Research | Vintage film aesthetics, user research, and tactile UX. |
+| **Vinay Dama** | Head of Marketing & Brand Outreach | Viral growth loops, marketing campaigns, and partnerships. |
+| **Heeransh Ameta** | Founding Member & Community Experience | Community testing, early feedback, and culture grounding. |
