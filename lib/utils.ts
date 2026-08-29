@@ -17,3 +17,17 @@ export function formatHandle(handle: string): string {
 export function formatPosition(pos: number): string {
   return `#${pos.toLocaleString()}`;
 }
+
+export function getBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+  return (
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://slow-blink-sooty.vercel.app"
+  );
+}
+
+export function getReferralUrl(referralCode: string): string {
+  return `${getBaseUrl()}/?ref=${referralCode}`;
+}

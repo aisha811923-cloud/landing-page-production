@@ -15,7 +15,7 @@ import {
   Film,
 } from "lucide-react";
 import { useWaitlist } from "@/context/WaitlistContext";
-import { formatHandle, formatPosition } from "@/lib/utils";
+import { formatHandle, formatPosition, getReferralUrl } from "@/lib/utils";
 
 export default function ReferralModal() {
   const { isModalOpen, closeModal, vipData, triggerConfetti } = useWaitlist();
@@ -30,9 +30,7 @@ export default function ReferralModal() {
   const refCount = vipData?.referralCount || 0;
   const rollPref = vipData?.rollPreference || 24;
 
-  const referralUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/?ref=${refCode}`
-    : `https://emulsion.club/?ref=${refCode}`;
+  const referralUrl = getReferralUrl(refCode);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(referralUrl);
@@ -240,7 +238,7 @@ export default function ReferralModal() {
               <button
                 onClick={copyToClipboard}
                 id="modal-copy-link-btn"
-                className="px-4 py-2.5 rounded-xl bg-[#1A1815] hover:bg-[#332F2B] text-[#F9F6F0] text-xs font-mono-mechanical font-semibold flex items-center gap-1.5 transition-colors shadow-xs active:scale-95"
+                className="px-4 py-2.5 rounded-xl bg-[#1A1815] hover:bg-[#332F2B] text-[#F9F6F0] text-xs font-mono-mechanical font-semibold flex items-center gap-1.5 transition-colors shadow-xs active:scale-95 cursor-pointer"
               >
                 {copied ? (
                   <>
@@ -261,14 +259,14 @@ export default function ReferralModal() {
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={shareToTwitter}
-              className="py-2.5 px-4 rounded-xl bg-[#FFFFFF] hover:bg-[#F3ECE1] border border-[#E8E1D3] text-xs font-semibold text-[#1A1815] flex items-center justify-center gap-2 transition-colors shadow-xs"
+              className="py-2.5 px-4 rounded-xl bg-[#FFFFFF] hover:bg-[#F3ECE1] border border-[#E8E1D3] text-xs font-semibold text-[#1A1815] flex items-center justify-center gap-2 transition-colors shadow-xs cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5 text-[#1DA1F2]" />
               Share on X / Twitter
             </button>
             <button
               onClick={shareToWhatsApp}
-              className="py-2.5 px-4 rounded-xl bg-[#FFFFFF] hover:bg-[#F3ECE1] border border-[#E8E1D3] text-xs font-semibold text-[#1A1815] flex items-center justify-center gap-2 transition-colors shadow-xs"
+              className="py-2.5 px-4 rounded-xl bg-[#FFFFFF] hover:bg-[#F3ECE1] border border-[#E8E1D3] text-xs font-semibold text-[#1A1815] flex items-center justify-center gap-2 transition-colors shadow-xs cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5 text-[#25D366]" />
               Share on WhatsApp
