@@ -14,9 +14,6 @@ import {
 import { TEAM_MEMBERS } from "@/lib/constants";
 import { useWaitlist } from "@/context/WaitlistContext";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 export default function OurStoryPage() {
   const { openModal, triggerConfetti, vipData } = useWaitlist();
   const [pledgeSigned, setPledgeSigned] = useState(false);

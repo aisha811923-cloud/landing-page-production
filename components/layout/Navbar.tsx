@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,10 +17,18 @@ export default function Navbar() {
   const pathname = usePathname();
   const { openModal, claimedCount, vipData, isLoadingCount } = useWaitlist();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const hasVip = mounted && Boolean(vipData?.success);
+  const isSoldOut = mounted && claimedCount >= 100;
 
   const handleCtaClick = () => {
     setMobileMenuOpen(false);
-    if (vipData?.success) {
+    if (hasVip) {
       openModal();
     } else {
       const formEl = document.getElementById("waitlist-form");
@@ -124,17 +132,17 @@ export default function Navbar() {
               onClick={handleCtaClick}
               id="nav-reserve-handle-btn"
               className={`hidden md:flex group relative items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300 shadow-xs active:scale-95 shrink-0 cursor-pointer ${
-                vipData?.success
+                hasVip
                   ? "bg-[#C5A870] text-[#1A1815] hover:bg-[#D6CCA8]"
                   : "bg-[#C86428] text-[#F9F6F0] hover:bg-[#A73812] hover:shadow-amber-glow/40"
               }`}
             >
-              {vipData?.success ? (
+              {hasVip ? (
                 <>
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Pass #{vipData.position}</span>
+                  <span>Pass #{vipData?.position}</span>
                 </>
-              ) : claimedCount >= 100 ? (
+              ) : isSoldOut ? (
                 <>
                   <Sparkles className="w-3.5 h-3.5 text-[#F3ECE1] group-hover:rotate-12 transition-transform" />
                   <span>Join Waitlist</span>
@@ -219,7 +227,7 @@ export default function Navbar() {
                 className="mt-2 w-full py-3.5 rounded-2xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 shadow-amber-glow transition-all active:scale-98 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4" />
-                {vipData?.success ? `View Pass #${vipData.position}` : "Reserve Handle"}
+                {hasVip ? `View Pass #${vipData?.position}` : "Reserve Handle"}
               </button>
             </motion.div>
           )}
