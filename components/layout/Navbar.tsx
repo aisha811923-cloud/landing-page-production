@@ -101,7 +101,7 @@ export default function Navbar() {
                     </motion.span>
                   </AnimatePresence>
                 )}
-                <span>/ 1,000 Passes</span>
+                <span>/ 100 Founding Passes</span>
               </span>
             </div>
 
@@ -109,7 +109,7 @@ export default function Navbar() {
             <button
               onClick={openModal}
               id="nav-reserve-handle-btn"
-              className={`hidden md:flex group relative items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300 shadow-xs active:scale-95 shrink-0 ${
+              className={`hidden md:flex group relative items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300 shadow-xs active:scale-95 shrink-0 cursor-pointer ${
                 vipData?.success
                   ? "bg-[#C5A870] text-[#1A1815] hover:bg-[#D6CCA8]"
                   : "bg-[#C86428] text-[#F9F6F0] hover:bg-[#A73812] hover:shadow-amber-glow/40"
@@ -119,6 +119,11 @@ export default function Navbar() {
                 <>
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Pass #{vipData.position}</span>
+                </>
+              ) : claimedCount >= 100 ? (
+                <>
+                  <Sparkles className="w-3.5 h-3.5 text-[#F3ECE1] group-hover:rotate-12 transition-transform" />
+                  <span>Join Waitlist</span>
                 </>
               ) : (
                 <>
@@ -175,7 +180,7 @@ export default function Navbar() {
               <div className="flex items-center justify-between pb-3 mb-1 border-b border-[#E8E1D3] font-mono-mechanical text-[11px] text-[#6E675F]">
                 <span>FOUNDING COHORT</span>
                 <span className="text-[#C86428] font-bold">
-                  {claimedCount} / 1,000 CLAIMED
+                  {claimedCount} / 100 CLAIMED
                 </span>
               </div>
               {NAV_LINKS.map((link) => {

@@ -13,7 +13,7 @@
   - `The Experience` (`/experience`)
   - `Our Story` (`/our-story`)
 - **Right:**
-  - Live Founding Member Badge: `682 / 1,000 Early Passes Claimed`.
+  - Live Founding Member Badge: `X / 100 Early Passes Claimed`.
   - *"Reserve Handle"* Quick CTA Button.
 
 ---

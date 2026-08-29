@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Gift,
   Film,
+  Users,
 } from "lucide-react";
 import { useWaitlist } from "@/context/WaitlistContext";
 import { formatHandle, formatPosition, getReferralUrl } from "@/lib/utils";
@@ -24,8 +25,11 @@ export default function ReferralModal() {
 
   if (!isModalOpen) return null;
 
+  const position = vipData?.position || 1;
+  const isFounding =
+    (vipData?.isFoundingMember !== false && position <= 100) ||
+    Boolean(vipData?.handle && position <= 100);
   const handle = vipData?.handle || "founding_member";
-  const position = vipData?.position || 683;
   const refCode = vipData?.referralCode || "VIP35MM";
   const refCount = vipData?.referralCount || 0;
   const rollPref = vipData?.rollPreference || 24;
@@ -41,14 +45,18 @@ export default function ReferralModal() {
 
   const shareToTwitter = () => {
     const text = encodeURIComponent(
-      `I just claimed my founding pass ${formatPosition(position)} on @emulsion_club — the anti-instant 35mm camera club. Shoot blind, develop together.\n\nReserve your handle before the 1,000 cohort fills up: ${referralUrl}`
+      isFounding
+        ? `I just claimed my founding pass ${formatPosition(position)}/100 on @emulsion_club — the anti-instant 35mm camera club. Shoot blind, develop together.\n\nJoin the waitlist before batch #02 fills up: ${referralUrl}`
+        : `I'm #${position} in line for @emulsion_club — the anti-instant 35mm camera club. Shoot blind, develop together.\n\nJoin the waitlist: ${referralUrl}`
     );
     window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
   };
 
   const shareToWhatsApp = () => {
     const text = encodeURIComponent(
-      `Hey! I just reserved my handle ${formatHandle(handle)} on EMULSION (the 35mm shared camera roll club). Claim your spot in the first 1,000 members: ${referralUrl}`
+      isFounding
+        ? `Hey! I just reserved my handle ${formatHandle(handle)} on EMULSION (the 35mm shared camera roll club). Claim your spot in the first 100 founding members: ${referralUrl}`
+        : `Hey! I just joined the waitlist for EMULSION (the 35mm shared camera roll club). Join the queue with my invite: ${referralUrl}`
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   };
@@ -75,16 +83,16 @@ export default function ReferralModal() {
         >
           {/* Decorative Corner Film Marks */}
           <div className="absolute top-3 left-4 font-mono-mechanical text-[9px] text-[#9C9488] tracking-widest">
-            [VIP PASS // COHORT 01]
+            {isFounding ? "[VIP PASS // COHORT 01]" : "[QUEUE TICKET // BATCH 02]"}
           </div>
           <div className="absolute top-3 right-12 font-mono-mechanical text-[9px] text-[#C5A870] tracking-widest font-semibold">
-            {formatPosition(position)} IN QUEUE
+            {isFounding ? `#${position} / 100 FOUNDING PASS` : `${formatPosition(position)} IN QUEUE`}
           </div>
 
           {/* Close Button */}
           <button
             onClick={closeModal}
-            className="absolute top-4 right-4 p-2 rounded-full bg-[#F3ECE1] hover:bg-[#E8E1D3] text-[#1A1815] transition-colors"
+            className="absolute top-4 right-4 p-2 rounded-full bg-[#F3ECE1] hover:bg-[#E8E1D3] text-[#1A1815] transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-4 h-4" />
@@ -92,105 +100,171 @@ export default function ReferralModal() {
 
           {/* Header */}
           <div className="text-center pt-4 pb-6 space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3ECE1] border border-[#C5A870]/60 text-xs font-mono-mechanical text-[#1A1815] mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#C86428]" />
-              VIP EARLY ACCESS RESERVED
-            </div>
-            <h3 className="font-serif-display text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1815]">
-              Welcome to the Club, {formatHandle(handle)}
-            </h3>
-            <p className="text-xs sm:text-sm text-[#6E675F]">
-              Your handle is locked. Every friend who joins with your link hops you <strong>5 spots ahead</strong> in line.
-            </p>
+            {isFounding ? (
+              <>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3ECE1] border border-[#C5A870]/60 text-xs font-mono-mechanical text-[#1A1815] mb-2">
+                  <Sparkles className="w-3.5 h-3.5 text-[#C86428]" />
+                  <span>VIP FOUNDING PASS RESERVED • #{position}/100</span>
+                </div>
+                <h3 className="font-serif-display text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1815]">
+                  Welcome to the Club, {formatHandle(handle)}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#6E675F]">
+                  Your handle is locked permanently. Every friend who joins with your link hops you <strong>5 spots ahead</strong> in line.
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3ECE1] border border-[#E8E1D3] text-xs font-mono-mechanical text-[#1A1815] mb-2">
+                  <Users className="w-3.5 h-3.5 text-[#C86428]" />
+                  <span>GENERAL WAITLIST QUEUE</span>
+                </div>
+                <h3 className="font-serif-display text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1815]">
+                  You&apos;re in Line for Batch #02
+                </h3>
+                <p className="text-xs sm:text-sm text-[#6E675F]">
+                  Position <strong>#{position}</strong> in queue. Invite friends with your referral link to skip <strong>5 spots ahead</strong> per friend.
+                </p>
+              </>
+            )}
           </div>
 
-          {/* 3D Golden VIP Card (Flip on Click) */}
-          <div className="relative perspective-1000 mb-6 cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
-            <motion.div
-              animate={{ rotateY: isFlipped ? 180 : 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformStyle: "preserve-3d" }}
-              className="relative w-full h-56 rounded-2xl p-6 bg-gradient-to-br from-[#E2D4B7] via-[#F4EBD8] to-[#C5A870] border border-[#C5A870] shadow-gold-pass flex flex-col justify-between overflow-hidden"
+          {/* Pass Card Component */}
+          {isFounding ? (
+            /* 3D Golden VIP Card (Flip on Click) */
+            <div
+              className="relative perspective-1000 mb-6 cursor-pointer"
+              onClick={() => setIsFlipped(!isFlipped)}
             >
-              {/* Holographic Shimmer Sweep */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
+              <motion.div
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                style={{ transformStyle: "preserve-3d" }}
+                className="relative w-full h-56 rounded-2xl p-6 bg-gradient-to-br from-[#E2D4B7] via-[#F4EBD8] to-[#C5A870] border border-[#C5A870] shadow-gold-pass flex flex-col justify-between overflow-hidden"
+              >
+                {/* Holographic Shimmer Sweep */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
 
-              {!isFlipped ? (
-                /* Card Front */
-                <>
-                  <div className="flex items-start justify-between relative z-10">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-[#1A1815] text-[#C5A870] flex items-center justify-center shadow-md">
-                        <Aperture className="w-4 h-4" />
+                {!isFlipped ? (
+                  /* Card Front */
+                  <>
+                    <div className="flex items-start justify-between relative z-10">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-[#1A1815] text-[#C5A870] flex items-center justify-center shadow-md">
+                          <Aperture className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="font-serif-display font-bold text-sm tracking-wider text-[#1A1815]">
+                            EMULSION
+                          </div>
+                          <div className="font-mono-mechanical text-[8px] tracking-widest text-[#6E675F]">
+                            FOUNDING PASS #{position} / 100
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-mono-mechanical text-sm sm:text-base font-bold text-[#1A1815] bg-[#FFFFFF]/70 px-2.5 py-1 rounded-lg border border-[#C5A870]/50 shadow-inner">
+                          #{position} / 100
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1 relative z-10">
+                      <div className="text-[10px] font-mono-mechanical text-[#6E675F] tracking-widest uppercase">
+                        RESERVED VIP HANDLE
+                      </div>
+                      <div className="font-mono-mechanical text-xl sm:text-2xl font-bold tracking-tight text-[#1A1815] drop-shadow-xs">
+                        {formatHandle(handle)}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] font-mono-mechanical text-[#1A1815] pt-2 border-t border-[#C5A870]/40 relative z-10">
+                      <div>
+                        <span className="text-[#6E675F]">ROLL PREF:</span>{" "}
+                        <strong className="text-[#C86428] font-bold">{rollPref} EXP</strong>
                       </div>
                       <div>
-                        <div className="font-serif-display font-bold text-sm tracking-wider text-[#1A1815]">
-                          EMULSION
-                        </div>
-                        <div className="font-mono-mechanical text-[8px] tracking-widest text-[#6E675F]">
-                          FOUNDING PASS #1000
-                        </div>
+                        <span className="text-[#6E675F]">REF CODE:</span>{" "}
+                        <strong>{refCode}</strong>
+                      </div>
+                      <div className="text-[#6E675F] text-[8px]">
+                        (Click to flip)
                       </div>
                     </div>
-                    <div className="text-right">
-                      <span className="font-mono-mechanical text-lg font-bold text-[#1A1815] bg-[#FFFFFF]/60 px-2.5 py-1 rounded-lg border border-[#C5A870]/50 shadow-inner">
-                        {formatPosition(position)}
+                  </>
+                ) : (
+                  /* Card Back */
+                  <div style={{ transform: "rotateY(180deg)" }} className="h-full flex flex-col justify-between">
+                    <div className="flex items-center justify-between border-b border-[#C5A870]/40 pb-2">
+                      <span className="font-mono-mechanical text-xs font-bold text-[#1A1815]">
+                        FOUNDING COHORT PRIVILEGES
                       </span>
+                      <ShieldCheck className="w-4 h-4 text-[#15803D]" />
+                    </div>
+                    <ul className="text-xs space-y-1 text-[#1A1815]/90 font-mono-mechanical">
+                      <li>• Guaranteed lifetime handle ownership</li>
+                      <li>• Free physical 4x6 print voucher on launch</li>
+                      <li>• Direct access to private darkroom builds</li>
+                      <li>• Priority development pipeline bypass</li>
+                    </ul>
+                    <div className="text-[9px] font-mono-mechanical text-[#6E675F] text-center pt-2">
+                      EMULSION 35MM CLUB • CLICK TO FLIP BACK
                     </div>
                   </div>
-
-                  <div className="space-y-1 relative z-10">
-                    <div className="text-[10px] font-mono-mechanical text-[#6E675F] tracking-widest uppercase">
-                      RESERVED VIP HANDLE
+                )}
+              </motion.div>
+            </div>
+          ) : (
+            /* Standard General Waitlist Queue Card */
+            <div className="relative mb-6">
+              <div className="relative w-full h-48 rounded-2xl p-6 bg-gradient-to-br from-[#FFFFFF] to-[#F3ECE1] border border-[#E8E1D3] shadow-tactile flex flex-col justify-between overflow-hidden">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-[#1A1815] text-[#F9F6F0] flex items-center justify-center shadow-xs">
+                      <Aperture className="w-4 h-4 text-[#C5A870]" />
                     </div>
-                    <div className="font-mono-mechanical text-xl sm:text-2xl font-bold tracking-tight text-[#1A1815] drop-shadow-xs">
-                      {formatHandle(handle)}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-[10px] font-mono-mechanical text-[#1A1815] pt-2 border-t border-[#C5A870]/40 relative z-10">
                     <div>
-                      <span className="text-[#6E675F]">ROLL PREF:</span>{" "}
-                      <strong className="text-[#C86428] font-bold">{rollPref} EXP</strong>
-                    </div>
-                    <div>
-                      <span className="text-[#6E675F]">REF CODE:</span>{" "}
-                      <strong>{refCode}</strong>
-                    </div>
-                    <div className="text-[#6E675F] text-[8px]">
-                      (Click to flip)
+                      <div className="font-serif-display font-bold text-sm tracking-wider text-[#1A1815]">
+                        EMULSION
+                      </div>
+                      <div className="font-mono-mechanical text-[8px] tracking-widest text-[#6E675F]">
+                        PUBLIC QUEUE TICKET
+                      </div>
                     </div>
                   </div>
-                </>
-              ) : (
-                /* Card Back */
-                <div style={{ transform: "rotateY(180deg)" }} className="h-full flex flex-col justify-between">
-                  <div className="flex items-center justify-between border-b border-[#C5A870]/40 pb-2">
-                    <span className="font-mono-mechanical text-xs font-bold text-[#1A1815]">
-                      FOUNDING COHORT PRIVILEGES
+                  <div className="text-right">
+                    <span className="font-mono-mechanical text-lg font-bold text-[#C86428] bg-[#FFFFFF] px-3 py-1 rounded-lg border border-[#E8E1D3] shadow-inner">
+                      #{position}
                     </span>
-                    <ShieldCheck className="w-4 h-4 text-[#15803D]" />
-                  </div>
-                  <ul className="text-xs space-y-1 text-[#1A1815]/90 font-mono-mechanical">
-                    <li>• Guaranteed handle ownership forever</li>
-                    <li>• Free physical 4x6 print voucher on launch</li>
-                    <li>• Direct access to private darkroom builds</li>
-                    <li>• Priority development pipeline bypass</li>
-                  </ul>
-                  <div className="text-[9px] font-mono-mechanical text-[#6E675F] text-center pt-2">
-                    EMULSION 35MM CLUB • CLICK TO FLIP BACK
                   </div>
                 </div>
-              )}
-            </motion.div>
-          </div>
+
+                <div className="space-y-1">
+                  <div className="text-[10px] font-mono-mechanical text-[#6E675F] uppercase tracking-wider">
+                    CURRENT QUEUE STATUS
+                  </div>
+                  <div className="font-mono-mechanical text-lg font-bold text-[#1A1815]">
+                    Position #{position} in Line
+                  </div>
+                  <div className="text-xs text-[#6E675F] font-mono-mechanical">
+                    Invite code active: <strong>{refCode}</strong>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-[10px] font-mono-mechanical text-[#6E675F] pt-2 border-t border-[#E8E1D3]">
+                  <span>ROLL PREF: <strong className="text-[#1A1815]">{rollPref} EXP</strong></span>
+                  <span className="text-[#15803D] font-bold">READY FOR BATCH #02</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Queue Hopping Meter */}
           <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#E8E1D3] shadow-xs mb-6 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-xs font-mono-mechanical font-semibold text-[#1A1815]">
                 <ArrowUp className="w-3.5 h-3.5 text-[#15803D]" />
-                QUEUE HOPPING ENGINE
+                <span>QUEUE HOPPING ENGINE</span>
               </div>
               <span className="text-xs font-mono-mechanical text-[#C86428] font-bold">
                 +{refCount * 5} SPOTS GAINED
@@ -217,8 +291,8 @@ export default function ReferralModal() {
                 3 Friends: Gold Canister
               </div>
               <div className={`p-1.5 rounded-lg border ${refCount >= 5 ? 'bg-[#F3ECE1] border-[#C5A870] text-[#1A1815]' : 'border-[#E8E1D3]'}`}>
-                <Sparkles className="w-3 h-3 mx-auto mb-1 text-[#C86428]" />
-                5 Friends: Instant Pass #1
+                <Sparkles className="w-3.5 h-3.5 mx-auto mb-1 text-[#C86428]" />
+                5 Friends: Instant Release #1
               </div>
             </div>
           </div>
@@ -262,14 +336,14 @@ export default function ReferralModal() {
               className="py-2.5 px-4 rounded-xl bg-[#FFFFFF] hover:bg-[#F3ECE1] border border-[#E8E1D3] text-xs font-semibold text-[#1A1815] flex items-center justify-center gap-2 transition-colors shadow-xs cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5 text-[#1DA1F2]" />
-              Share on X / Twitter
+              <span>Share on X</span>
             </button>
             <button
               onClick={shareToWhatsApp}
               className="py-2.5 px-4 rounded-xl bg-[#FFFFFF] hover:bg-[#F3ECE1] border border-[#E8E1D3] text-xs font-semibold text-[#1A1815] flex items-center justify-center gap-2 transition-colors shadow-xs cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5 text-[#25D366]" />
-              Share on WhatsApp
+              <span>Share on WhatsApp</span>
             </button>
           </div>
         </motion.div>

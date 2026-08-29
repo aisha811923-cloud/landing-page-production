@@ -101,7 +101,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     name: "Heeransh Ameta",
     role: "Founding Member & Community Experience",
     focus: "Early access testing, user feedback, and culture grounding.",
-    bio: "Leads our 1,000 founding member cohort, alpha testing live roll swaps, hosting physical gallery exhibitions, and ensuring real human connection.",
+    bio: "Leads our 100 founding member cohort, alpha testing live roll swaps, hosting physical gallery exhibitions, and ensuring real human connection.",
     favoriteStock: "Kodak Tri-X 400",
     iso: "ISO 400 Grain",
     location: "Toronto / Dubai",
@@ -148,3 +148,24 @@ export const VIEWFINDER_SCENES: ViewfinderScene[] = [
     grainIntensity: 0.45,
   },
 ];
+
+export const RESERVED_HANDLES = new Set([
+  "admin",
+  "root",
+  "emulsion",
+  "official",
+  "support",
+  "help",
+  "api",
+  "auth",
+  "app",
+  "moderator",
+  "system",
+  "null",
+  "undefined",
+  "founding",
+  "vip",
+  "club",
+  "slowblink",
+]);
+

@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "EMULSION • The Anti-Instant Camera Club",
     description:
-      "Shoot blind. Develop later. Share the anticipation. Claim your founding pass in the first 1,000 member cohort.",
+      "Shoot blind. Develop later. Share the anticipation. Claim your founding pass in the first 100 member cohort.",
     url: "https://emulsion.club",
     siteName: "EMULSION",
     locale: "en_US",

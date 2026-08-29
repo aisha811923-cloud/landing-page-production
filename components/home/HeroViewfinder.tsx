@@ -72,7 +72,7 @@ export default function HeroViewfinder() {
         >
           <span className="w-2 h-2 rounded-full bg-[#C86428] animate-pulse" />
           <span>
-            BATCH #01 • {Math.max(0, 1000 - claimedCount)} / 1,000 PASSES REMAINING
+            BATCH #01 • {Math.max(0, 100 - claimedCount)} / 100 FOUNDING PASSES REMAINING
           </span>
         </motion.div>
 

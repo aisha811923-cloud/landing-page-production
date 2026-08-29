@@ -1,7 +1,7 @@
 # Product Requirements Document (PRD)
 **Project Name:** EMULSION (The Analog Social Club & Shared Camera Rolls)[cite: 9]
 **Document Version:** 2.0.0  
-**Target Milestone:** Early Access Waitlist Landing Page (1,000 Founding Member Validation)[cite: 9]
+**Target Milestone:** Early Access Waitlist Landing Page (100 Founding Member Validation)[cite: 9]
 **Primary Tech Stack:** Next.js 15 (App Router), Tailwind CSS v4, Framer Motion, Supabase (PostgreSQL, Realtime, RLS), Google Antigravity IDE.[cite: 9]
 
 ---
@@ -22,10 +22,10 @@ EMULSION brings back the intentionality, excitement, and shared anticipation of 
 
 ---
 
-## 2. Validation Goal: The 1,000-Member Milestone
+## 2. Validation Goal: The 100-Member Milestone
 
 Before developing the full native iOS/Android binaries, we validate market demand using an interactive, luxury editorial web landing page[cite: 9]:
-- **Target KPI:** 1,000 verified email signups with reserved `@handle` passes[cite: 9].
+- **Target KPI:** 100 verified email signups with reserved `@handle` passes[cite: 9].
 - **Viral Referral Loop:** Every user gets a unique referral link (`emulsion.club/join?ref=HANDLE`) that hops them 5 spots ahead in the queue for every referred friend[cite: 9].
 
 ---
@@ -44,7 +44,7 @@ The landing experience is divided into three distinct routes connected by a pers
 ### 4.1 Global Navigation Header
 - **Brand Monogram:** `EMULSION` (Swappable project token).
 - **Center Nav Tabs:** `Home` (`/`), `The Experience` (`/experience`), `Our Story` (`/our-story`).
-- **Live Counter Badge:** Real-time counter showing `X / 1,000 Founding Passes Claimed`.
+- **Live Counter Badge:** Real-time counter showing `X / 100 Founding Passes Claimed`.
 - **Right CTA:** *"Reserve Handle"* button.
 
 ### 4.2 Interactive Hero Viewfinder (`/`)

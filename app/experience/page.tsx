@@ -434,7 +434,7 @@ export default function ExperiencePage() {
       >
         <div className="space-y-2 text-center sm:text-left">
           <span className="font-mono-mechanical text-xs text-[#C5A870] uppercase tracking-widest">
-            JOIN THE 1,000 FOUNDING COHORT
+            JOIN THE 100 FOUNDING COHORT
           </span>
           <h3 className="font-serif-display text-2xl sm:text-4xl font-bold break-words">
             Experience 35mm Analog Anticipation

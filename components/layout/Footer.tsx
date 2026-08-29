@@ -99,7 +99,7 @@ export default function Footer() {
             <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#E8E1D3] shadow-xs space-y-2">
               <div className="flex items-center justify-between text-xs font-mono-mechanical">
                 <span className="text-[#6E675F]">EARLY ACCESS</span>
-                <span className="text-[#15803D] font-bold">1,000 FOUNDING PASSES</span>
+                <span className="text-[#15803D] font-bold">100 FOUNDING PASSES</span>
               </div>
               <button
                 onClick={openModal}

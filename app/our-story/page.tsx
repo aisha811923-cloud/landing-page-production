@@ -308,7 +308,7 @@ export default function OurStoryPage() {
             Claim Your Founding Pass
           </h3>
           <p className="text-xs sm:text-sm text-[#9C9488] break-words">
-            Lock your lifetime handle in the first 1,000 member cohort.
+            Lock your lifetime handle in the first 100 member cohort.
           </p>
         </div>
 
