@@ -128,64 +128,65 @@ export default function RollDial() {
             </div>
 
             {/* Right: Tier Details & Specs */}
-            <div className="md:col-span-8 space-y-4">
-              <div className="space-y-1.5">
-                <span className="font-mono-mechanical text-xs uppercase tracking-widest text-[#C86428] font-bold">
+            <div className="md:col-span-8 w-full min-w-0 flex flex-col justify-between space-y-6">
+              {/* Header & Description */}
+              <div className="space-y-2 min-w-0">
+                <span className="font-mono-mechanical text-xs uppercase tracking-widest text-[#C86428] font-semibold">
                   {activeTier.badge}
                 </span>
-                <h3 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#1A1815] break-words">
+                <h3 className="font-serif-display text-2xl lg:text-3xl font-normal text-[#1A1815] leading-tight break-words">
                   {activeTier.name} — {activeTier.subtitle}
                 </h3>
-                <p className="text-sm text-[#6E675F] leading-relaxed break-words">
+                <p className="text-sm lg:text-base text-[#6E675F] leading-relaxed break-words whitespace-normal max-w-xl">
                   {activeTier.description}
                 </p>
               </div>
 
-              {/* Specs Pills */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs font-mono-mechanical text-[#1A1815]">
-                {/* Pacing Container */}
-                <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-2xl bg-white border border-[#E8E1D3] shadow-xs">
+              {/* Metadata Badges Grid (Pacing & Best For) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 w-full min-w-0">
+                {/* Pacing Card */}
+                <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl bg-[#FFFFFF] border border-[#E8E1D3] min-w-0 shadow-xs">
                   <div className="shrink-0 mt-0.5 text-[#C86428]">
                     <Clock className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className="block font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#9C9488] mb-0.5">
+                    <span className="block font-mono text-[10px] uppercase tracking-widest text-[#9C9488] mb-0.5">
                       PACING
                     </span>
-                    <p className="font-mono text-xs sm:text-sm font-medium text-[#1A1815] leading-snug whitespace-normal break-words">
+                    <p className="font-mono text-xs lg:text-sm font-medium text-[#1A1815] leading-snug break-words whitespace-normal">
                       {activeTier.duration}
                     </p>
                   </div>
                 </div>
 
-                {/* Best For Container */}
-                <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-2xl bg-white border border-[#E8E1D3] shadow-xs">
+                {/* Best For Card */}
+                <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl bg-[#FFFFFF] border border-[#E8E1D3] min-w-0 shadow-xs">
                   <div className="shrink-0 mt-0.5 text-[#C86428]">
                     <Users className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className="block font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#9C9488] mb-0.5">
+                    <span className="block font-mono text-[10px] uppercase tracking-widest text-[#9C9488] mb-0.5">
                       BEST FOR
                     </span>
-                    <p className="font-mono text-xs sm:text-sm font-medium text-[#1A1815] leading-snug whitespace-normal break-words">
+                    <p className="font-mono text-xs lg:text-sm font-medium text-[#1A1815] leading-snug break-words whitespace-normal">
                       {activeTier.idealFor}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="text-xs font-mono-mechanical text-[#6E675F]">
+              {/* Footer Subtext & Select Button */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-[#E8E1D3]/60 min-w-0">
+                <p className="font-mono text-xs text-[#9C9488] break-words whitespace-normal max-w-sm">
                   Supports 1-person solo rolls or 2-person Roll Swaps.
-                </div>
+                </p>
                 <motion.button
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={openModal}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#1A1815] hover:bg-[#332F2B] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs cursor-pointer"
+                  className="shrink-0 px-5 py-2.5 rounded-xl bg-[#1A1815] text-[#F9F6F0] font-mono text-xs tracking-wider uppercase hover:bg-[#C86428] transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5 shadow-xs"
                 >
-                  <span>Select {activeTier.exposures} EXP</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <span>SELECT {activeTier.exposures} EXP →</span>
                 </motion.button>
               </div>
             </div>
@@ -195,4 +196,5 @@ export default function RollDial() {
     </section>
   );
 }
+
 
