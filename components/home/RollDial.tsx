@@ -13,7 +13,7 @@ export default function RollDial() {
   const activeTier = ROLL_TIERS[selectedIdx];
 
   return (
-    <section className="py-20 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto space-y-10 overflow-hidden">
+    <section id="roll-selector-section" className="pt-24 sm:pt-32 pb-20 sm:pb-24 px-4 sm:px-6 max-w-6xl mx-auto space-y-10 overflow-hidden">
       {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 25 }}
@@ -143,18 +143,33 @@ export default function RollDial() {
 
               {/* Specs Pills */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs font-mono-mechanical text-[#1A1815]">
-                <div className="p-3 rounded-xl bg-[#FFFFFF] border border-[#E8E1D3] flex items-center gap-2.5">
-                  <Clock className="w-4 h-4 text-[#C86428] shrink-0" />
-                  <div>
-                    <span className="text-[10px] text-[#9C9488] block">PACING</span>
-                    <strong>{activeTier.duration}</strong>
+                {/* Pacing Container */}
+                <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-2xl bg-white border border-[#E8E1D3] shadow-xs">
+                  <div className="shrink-0 mt-0.5 text-[#C86428]">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="block font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#9C9488] mb-0.5">
+                      PACING
+                    </span>
+                    <p className="font-mono text-xs sm:text-sm font-medium text-[#1A1815] leading-snug whitespace-normal break-words">
+                      {activeTier.duration}
+                    </p>
                   </div>
                 </div>
-                <div className="p-3 rounded-xl bg-[#FFFFFF] border border-[#E8E1D3] flex items-center gap-2.5">
-                  <Users className="w-4 h-4 text-[#C86428] shrink-0" />
-                  <div>
-                    <span className="text-[10px] text-[#9C9488] block">BEST FOR</span>
-                    <strong className="truncate block">{activeTier.idealFor}</strong>
+
+                {/* Best For Container */}
+                <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-2xl bg-white border border-[#E8E1D3] shadow-xs">
+                  <div className="shrink-0 mt-0.5 text-[#C86428]">
+                    <Users className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="block font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#9C9488] mb-0.5">
+                      BEST FOR
+                    </span>
+                    <p className="font-mono text-xs sm:text-sm font-medium text-[#1A1815] leading-snug whitespace-normal break-words">
+                      {activeTier.idealFor}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -180,3 +195,4 @@ export default function RollDial() {
     </section>
   );
 }
+
