@@ -18,12 +18,20 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default function OurStoryPage() {
-  const { openModal, triggerConfetti } = useWaitlist();
+  const { openModal, triggerConfetti, vipData } = useWaitlist();
   const [pledgeSigned, setPledgeSigned] = useState(false);
 
   const handleSignPledge = () => {
     setPledgeSigned(true);
     triggerConfetti();
+  };
+
+  const handleCtaClick = () => {
+    if (vipData?.success) {
+      openModal();
+    } else {
+      window.location.href = "/#waitlist-form";
+    }
   };
 
   const containerVariants: Variants = {
@@ -318,11 +326,11 @@ export default function OurStoryPage() {
         <motion.button
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.96 }}
-          onClick={openModal}
+          onClick={handleCtaClick}
           className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 shadow-amber-glow transition-all active:scale-95 shrink-0 cursor-pointer"
         >
           <Sparkles className="w-4 h-4" />
-          <span>Reserve VIP Handle</span>
+          <span>{vipData?.success ? "View My VIP Pass" : "Reserve VIP Handle"}</span>
           <ArrowRight className="w-4 h-4" />
         </motion.button>
       </motion.section>

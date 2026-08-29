@@ -6,7 +6,20 @@ import { Aperture, Sparkles, Film, ArrowUpRight, Heart, Shield, FileText, Mail }
 import { useWaitlist } from "@/context/WaitlistContext";
 
 export default function Footer() {
-  const { openModal } = useWaitlist();
+  const { openModal, vipData } = useWaitlist();
+
+  const handleCtaClick = () => {
+    if (vipData?.success) {
+      openModal();
+    } else {
+      const formEl = document.getElementById("waitlist-form");
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#waitlist-form";
+      }
+    }
+  };
 
   return (
     <footer className="relative bg-[#F3ECE1] border-t border-[#E8E1D3] pt-16 pb-12 px-6 sm:px-12 text-[#1A1815] overflow-hidden">
@@ -78,7 +91,7 @@ export default function Footer() {
               </li>
               <li>
                 <button
-                  onClick={openModal}
+                  onClick={handleCtaClick}
                   className="hover:text-[#C86428] font-semibold transition-colors inline-flex items-center gap-1 text-[#1A1815] cursor-pointer"
                 >
                   Reserve Handle
@@ -138,11 +151,11 @@ export default function Footer() {
                 <span className="text-[#15803D] font-bold">100 FOUNDING PASSES</span>
               </div>
               <button
-                onClick={openModal}
+                onClick={handleCtaClick}
                 className="w-full py-2.5 rounded-xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                Reserve Early Pass
+                {vipData?.success ? "View My VIP Pass" : "Reserve Early Pass"}
               </button>
             </div>
           </div>

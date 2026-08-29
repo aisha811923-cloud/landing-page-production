@@ -23,7 +23,15 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default function ExperiencePage() {
-  const { openModal } = useWaitlist();
+  const { openModal, vipData } = useWaitlist();
+
+  const handleCtaClick = () => {
+    if (vipData?.success) {
+      openModal();
+    } else {
+      window.location.href = "/#waitlist-form";
+    }
+  };
 
   // Interactive Roll Swap State
   const [userShots, setUserShots] = useState(3);
@@ -33,6 +41,7 @@ export default function ExperiencePage() {
 
   // Interactive Blind Viewfinder Simulation
   const [isLensLocked, setIsLensLocked] = useState(false);
+  const [capturedCount, setCapturedCount] = useState(0);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -450,11 +459,11 @@ export default function ExperiencePage() {
         <motion.button
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.96 }}
-          onClick={openModal}
+          onClick={handleCtaClick}
           className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 shadow-amber-glow transition-all active:scale-95 shrink-0 cursor-pointer"
         >
           <Sparkles className="w-4 h-4" />
-          <span>Claim VIP Founding Pass</span>
+          <span>{vipData?.success ? "View My VIP Pass" : "Claim VIP Founding Pass"}</span>
           <ArrowRight className="w-4 h-4" />
         </motion.button>
       </motion.section>

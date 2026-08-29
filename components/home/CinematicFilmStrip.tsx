@@ -21,6 +21,19 @@ export default function CinematicFilmStrip({ onReset }: CinematicFilmStripProps)
   const { openModal, vipData } = useWaitlist();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const handleCtaClick = () => {
+    if (vipData?.success) {
+      openModal();
+    } else {
+      const formEl = document.getElementById("waitlist-form");
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#waitlist-form";
+      }
+    }
+  };
+
   const FRAMES = [
     {
       scene: VIEWFINDER_SCENES[0],
@@ -201,7 +214,7 @@ export default function CinematicFilmStrip({ onReset }: CinematicFilmStripProps)
           </button>
 
           <button
-            onClick={openModal}
+            onClick={handleCtaClick}
             className="flex-1 sm:flex-initial px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 shadow-amber-glow transition-all active:scale-95 cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#F9F6F0]" />

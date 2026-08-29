@@ -45,9 +45,22 @@ const CONTACT_PHOTOS = [
 ];
 
 export default function ContactSheet3D() {
-  const { openModal, triggerConfetti } = useWaitlist();
+  const { openModal, triggerConfetti, vipData } = useWaitlist();
   const [isStoryView, setIsStoryView] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
+
+  const handleCtaClick = () => {
+    if (vipData?.success) {
+      openModal();
+    } else {
+      const formEl = document.getElementById("waitlist-form");
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#waitlist-form";
+      }
+    }
+  };
 
   // Mouse tilt parallax values
   const mouseX = useMotionValue(0);
@@ -212,11 +225,11 @@ export default function ContactSheet3D() {
           <motion.button
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.96 }}
-            onClick={openModal}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors shadow-amber-glow"
+            onClick={handleCtaClick}
+            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors shadow-amber-glow cursor-pointer"
           >
             <Sparkles className="w-4 h-4" />
-            <span>Reserve Pass to Generate Yours</span>
+            <span>{vipData?.success ? "View My VIP Pass" : "Reserve Pass to Generate Yours"}</span>
           </motion.button>
         </div>
       </motion.div>

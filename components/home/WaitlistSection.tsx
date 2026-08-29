@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useEffect, useTransition, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
@@ -31,7 +31,11 @@ export default function WaitlistSection() {
   const [handle, setHandle] = useState("");
   const [email, setEmail] = useState("");
   const [rollPreference, setRollPreference] = useState(24);
-  const [referralCode, setReferralCode] = useState("");
+  const [referralInput, setReferralInput] = useState("");
+  const [referralState, setReferralState] = useState<{
+    status: "idle" | "checking" | "valid" | "invalid";
+    message: string;
+  }>({ status: "idle", message: "" });
   const [errorMsg, setErrorMsg] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -40,12 +44,68 @@ export default function WaitlistSection() {
     "idle" | "checking" | "available" | "taken" | "reserved"
   >("idle");
 
+  // Referral code verification against Supabase
+  const verifyReferralCode = useCallback(async (code: string) => {
+    const cleanCode = code.trim().toUpperCase();
+    if (!cleanCode) {
+      setReferralState({ status: "idle", message: "" });
+      return;
+    }
+
+    setReferralState({ status: "checking", message: "Checking invite code..." });
+
+    try {
+      const { data } = await supabase
+        .from("waitlist")
+        .select("handle, referral_code")
+        .eq("referral_code", cleanCode)
+        .maybeSingle();
+
+      if (data) {
+        setReferralState({
+          status: "valid",
+          message: data.handle
+            ? `✓ Valid invite from @${data.handle} (+5 rank boost applied)`
+            : `✓ Valid invite code (+5 rank boost applied)`,
+        });
+      } else {
+        setReferralState({
+          status: "invalid",
+          message: "✕ Code not found (signup will proceed normally without referral boost)",
+        });
+      }
+    } catch (err) {
+      console.warn("Referral verification notice:", err);
+      setReferralState({
+        status: "idle",
+        message: "",
+      });
+    }
+  }, []);
+
+  // Auto-fill and verify referral code from URL
   useEffect(() => {
     const ref = searchParams.get("ref");
     if (ref) {
-      setReferralCode(ref.toUpperCase());
+      const cleanRef = ref.trim().toUpperCase();
+      setReferralInput(cleanRef);
+      verifyReferralCode(cleanRef);
     }
-  }, [searchParams]);
+  }, [searchParams, verifyReferralCode]);
+
+  // Debounced referral code check when typed manually
+  useEffect(() => {
+    if (!referralInput.trim()) {
+      setReferralState({ status: "idle", message: "" });
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      verifyReferralCode(referralInput);
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [referralInput, verifyReferralCode]);
 
   // Debounced real-time handle validation against Supabase
   useEffect(() => {
@@ -105,6 +165,14 @@ export default function WaitlistSection() {
     setErrorMsg("");
   };
 
+  const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.toUpperCase();
+    setReferralInput(val);
+    if (!val.trim()) {
+      setReferralState({ status: "idle", message: "" });
+    }
+  };
+
   const isSubmitDisabled =
     isPending ||
     (!isFoundingCapped &&
@@ -140,8 +208,10 @@ export default function WaitlistSection() {
       }
       formData.append("email", email);
       formData.append("rollPreference", rollPreference.toString());
-      if (referralCode) {
-        formData.append("referralCode", referralCode);
+
+      // If a valid referral code was verified, pass it; otherwise pass empty
+      if (referralState.status === "valid" && referralInput.trim()) {
+        formData.append("referralCode", referralInput.trim().toUpperCase());
       }
 
       const result = await joinWaitlistAction(null, formData);
@@ -154,7 +224,10 @@ export default function WaitlistSection() {
   };
 
   return (
-    <section id="waitlist-section" className="py-20 sm:py-24 px-4 sm:px-6 max-w-4xl mx-auto overflow-hidden">
+    <section
+      id="waitlist-form"
+      className="scroll-mt-32 py-20 sm:py-24 px-4 sm:px-6 max-w-4xl mx-auto overflow-hidden"
+    >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -241,13 +314,6 @@ export default function WaitlistSection() {
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </motion.div>
-          )}
-
-          {referralCode && (
-            <div className="p-3 rounded-xl bg-[#F3ECE1] border border-[#C5A870] text-xs font-mono-mechanical text-[#1A1815] flex items-center justify-between">
-              <span>Referred by invite code: <strong>{referralCode}</strong></span>
-              <span className="text-[#15803D] font-bold">+5 Queue Boost Active</span>
-            </div>
           )}
 
           {/* Handle Input (Shown ONLY when count < 100) */}
@@ -346,10 +412,78 @@ export default function WaitlistSection() {
             </p>
           </div>
 
+          {/* Invite / Referral Code (Strictly Optional) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-mono-mechanical uppercase tracking-wider text-[#1A1815] font-semibold">
+                {!isFoundingCapped ? "3. Invite / Referral Code (Optional)" : "2. Invite / Referral Code (Optional)"}
+              </label>
+              {/* Real-time Status Indicator */}
+              <div className="text-xs font-mono-mechanical">
+                {referralState.status === "checking" && (
+                  <span className="inline-flex items-center gap-1 text-[#6E675F]">
+                    <Loader2 className="w-3 h-3 animate-spin text-[#C86428]" />
+                    <span>Checking code...</span>
+                  </span>
+                )}
+                {referralState.status === "valid" && (
+                  <span className="inline-flex items-center gap-1 text-[#15803D] font-bold">
+                    <Check className="w-3.5 h-3.5" />
+                    <span>[VALID INVITE]</span>
+                  </span>
+                )}
+                {referralState.status === "invalid" && (
+                  <span className="inline-flex items-center gap-1 text-[#9C9488] font-medium">
+                    <span>[NOT FOUND]</span>
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C86428]">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <input
+                type="text"
+                value={referralInput}
+                onChange={handleReferralChange}
+                placeholder="e.g. A1B2C3D4"
+                id="waitlist-referral-input"
+                className={`w-full pl-10 pr-10 py-3.5 rounded-2xl bg-[#F9F6F0] border text-sm font-mono-mechanical text-[#1A1815] placeholder:text-[#9C9488] focus:outline-none transition-all uppercase tracking-wider ${
+                  referralState.status === "valid"
+                    ? "border-[#15803D] bg-[#F0FDF4] focus:border-[#15803D]"
+                    : "border-[#E8E1D3] focus:border-[#C86428] focus:bg-[#FFFFFF]"
+                }`}
+              />
+              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+                {referralState.status === "valid" && (
+                  <CheckCircle2 className="w-4 h-4 text-[#15803D]" />
+                )}
+              </div>
+            </div>
+
+            {referralState.message ? (
+              <p
+                className={`text-[11px] font-mono-mechanical ${
+                  referralState.status === "valid"
+                    ? "text-[#15803D] font-semibold"
+                    : "text-[#6E675F]"
+                }`}
+              >
+                {referralState.message}
+              </p>
+            ) : (
+              <p className="text-[10px] font-mono-mechanical text-[#9C9488]">
+                Have a friend already in the club? Enter their 8-character code to skip 5 queue spots.
+              </p>
+            )}
+          </div>
+
           {/* Roll Capacity Preference */}
           <div className="space-y-2">
             <label className="block text-xs font-mono-mechanical uppercase tracking-wider text-[#1A1815] font-semibold">
-              {!isFoundingCapped ? "3. Initial Roll Preference" : "2. Initial Roll Preference"}
+              {!isFoundingCapped ? "4. Initial Roll Preference" : "3. Initial Roll Preference"}
             </label>
             <div className="grid grid-cols-5 gap-2">
               {[4, 8, 12, 16, 24].map((exp) => (
@@ -420,3 +554,4 @@ export default function WaitlistSection() {
     </section>
   );
 }
+

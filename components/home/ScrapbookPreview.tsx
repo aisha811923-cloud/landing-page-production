@@ -36,7 +36,20 @@ const PINNED_MEMORIES = [
 ];
 
 export default function ScrapbookPreview() {
-  const { openModal } = useWaitlist();
+  const { openModal, vipData } = useWaitlist();
+
+  const handleCtaClick = () => {
+    if (vipData?.success) {
+      openModal();
+    } else {
+      const formEl = document.getElementById("waitlist-form");
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#waitlist-form";
+      }
+    }
+  };
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -171,11 +184,11 @@ export default function ScrapbookPreview() {
             <motion.button
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.96 }}
-              onClick={openModal}
-              className="px-5 py-2.5 rounded-xl bg-[#1A1815] hover:bg-[#332F2B] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition-colors shadow-xs"
+              onClick={handleCtaClick}
+              className="px-5 py-2.5 rounded-xl bg-[#1A1815] hover:bg-[#332F2B] text-[#F9F6F0] text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition-colors shadow-xs cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#C5A870]" />
-              <span>Join Waitlist for Scrapbook Access</span>
+              <span>{vipData?.success ? "View My VIP Pass" : "Join Waitlist for Scrapbook Access"}</span>
             </motion.button>
           </div>
         </motion.div>

@@ -18,6 +18,20 @@ export default function Navbar() {
   const { openModal, claimedCount, vipData, isLoadingCount } = useWaitlist();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleCtaClick = () => {
+    setMobileMenuOpen(false);
+    if (vipData?.success) {
+      openModal();
+    } else {
+      const formEl = document.getElementById("waitlist-form");
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#waitlist-form";
+      }
+    }
+  };
+
   return (
     <header className="fixed top-2 sm:top-4 left-0 right-0 z-40 flex justify-center px-3 sm:px-6 pointer-events-none">
       <div className="w-full max-w-6xl pointer-events-auto">
@@ -107,7 +121,7 @@ export default function Navbar() {
 
             {/* Desktop CTA Button */}
             <button
-              onClick={openModal}
+              onClick={handleCtaClick}
               id="nav-reserve-handle-btn"
               className={`hidden md:flex group relative items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300 shadow-xs active:scale-95 shrink-0 cursor-pointer ${
                 vipData?.success
@@ -201,11 +215,8 @@ export default function Navbar() {
                 );
               })}
               <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  openModal();
-                }}
-                className="mt-2 w-full py-3.5 rounded-2xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 shadow-amber-glow transition-all active:scale-98"
+                onClick={handleCtaClick}
+                className="mt-2 w-full py-3.5 rounded-2xl bg-[#C86428] hover:bg-[#A73812] text-[#F9F6F0] text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 shadow-amber-glow transition-all active:scale-98 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4" />
                 {vipData?.success ? `View Pass #${vipData.position}` : "Reserve Handle"}

@@ -7,10 +7,24 @@ import { ROLL_TIERS } from "@/lib/constants";
 import { useWaitlist } from "@/context/WaitlistContext";
 
 export default function RollDial() {
-  const { openModal } = useWaitlist();
-  const [selectedIdx, setSelectedIdx] = useState(2);
+  const { openModal, vipData } = useWaitlist();
+  const [selectedExp, setSelectedExp] = useState<number>(12);
 
-  const activeTier = ROLL_TIERS[selectedIdx];
+  const activeTier =
+    ROLL_TIERS.find((t) => t.exposures === selectedExp) || ROLL_TIERS[2];
+
+  const handleSelectTier = () => {
+    if (vipData?.success) {
+      openModal();
+    } else {
+      const formEl = document.getElementById("waitlist-form");
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#waitlist-form";
+      }
+    }
+  };
 
   return (
     <section id="roll-selector-section" className="pt-24 sm:pt-32 pb-20 sm:pb-24 px-4 sm:px-6 max-w-6xl mx-auto space-y-10 overflow-hidden">
@@ -52,14 +66,14 @@ export default function RollDial() {
 
         {/* Responsive Mobile Swipeable Carousel / Desktop Grid */}
         <div className="flex md:grid md:grid-cols-5 overflow-x-auto snap-x snap-mandatory gap-2 sm:gap-3 no-scrollbar pb-2 -mx-1 px-1">
-          {ROLL_TIERS.map((tier, idx) => {
-            const isSelected = selectedIdx === idx;
+          {ROLL_TIERS.map((tier) => {
+            const isSelected = selectedExp === tier.exposures;
             return (
               <motion.button
                 key={tier.exposures}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedIdx(idx)}
+                onClick={() => setSelectedExp(tier.exposures)}
                 id={`roll-tier-btn-${tier.exposures}`}
                 className={`relative py-3.5 sm:py-4 px-4 sm:px-2 rounded-2xl flex flex-col items-center justify-center transition-all duration-200 snap-center shrink-0 min-w-[80px] sm:min-w-0 cursor-pointer ${
                   isSelected
@@ -183,7 +197,7 @@ export default function RollDial() {
                 <motion.button
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.96 }}
-                  onClick={openModal}
+                  onClick={handleSelectTier}
                   className="shrink-0 px-5 py-2.5 rounded-xl bg-[#1A1815] text-[#F9F6F0] font-mono text-xs tracking-wider uppercase hover:bg-[#C86428] transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5 shadow-xs"
                 >
                   <span>SELECT {activeTier.exposures} EXP →</span>
