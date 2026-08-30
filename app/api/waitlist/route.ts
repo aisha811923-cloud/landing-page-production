@@ -9,7 +9,27 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const handle = searchParams.get("handle");
+    const emailParam = searchParams.get("email");
     const ref = searchParams.get("ref");
+
+    if (emailParam) {
+      const cleanEmail = emailParam.toLowerCase().trim();
+      const { data, error } = await supabase
+        .from("waitlist")
+        .select("email, position")
+        .eq("email", cleanEmail)
+        .maybeSingle();
+
+      if (error || !data) {
+        return NextResponse.json({ available: true, email: cleanEmail });
+      }
+
+      return NextResponse.json({
+        available: false,
+        email: data.email,
+        position: data.position,
+      });
+    }
 
     if (handle) {
       const cleanHandle = handle.toLowerCase().trim();

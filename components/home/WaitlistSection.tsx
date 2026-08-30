@@ -44,6 +44,11 @@ export default function WaitlistSection() {
     "idle" | "checking" | "available" | "taken" | "reserved"
   >("idle");
 
+  // Email availability state: 'idle' | 'checking' | 'available' | 'taken'
+  const [emailStatus, setEmailStatus] = useState<
+    "idle" | "checking" | "available" | "taken"
+  >("idle");
+
   // Referral code verification against Supabase
   const verifyReferralCode = useCallback(async (code: string) => {
     const cleanCode = code.trim().toUpperCase();
@@ -159,10 +164,61 @@ export default function WaitlistSection() {
     return () => clearTimeout(timer);
   }, [handle, isFoundingCapped]);
 
+  // Debounced real-time email validation against Supabase
+  useEffect(() => {
+    const clean = email.trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!clean || !emailRegex.test(clean)) {
+      setEmailStatus("idle");
+      return;
+    }
+
+    setEmailStatus("checking");
+
+    const timer = setTimeout(async () => {
+      try {
+        // 1. Direct Supabase query
+        const { data, error } = await supabase
+          .from("waitlist")
+          .select("email")
+          .eq("email", clean)
+          .maybeSingle();
+
+        if (error) {
+          // Fallback to API route if direct query has RLS constraint
+          const res = await fetch(`/api/waitlist?email=${encodeURIComponent(clean)}`);
+          const apiData = await res.json();
+          if (apiData.available === false) {
+            setEmailStatus("taken");
+          } else {
+            setEmailStatus("available");
+          }
+        } else if (data && data.email) {
+          setEmailStatus("taken");
+        } else {
+          setEmailStatus("available");
+        }
+      } catch (err) {
+        console.warn("Email verification catch:", err);
+        setEmailStatus("available");
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [email]);
+
   const handleHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const clean = sanitizeHandle(e.target.value);
     setHandle(clean);
     setErrorMsg("");
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setErrorMsg("");
+    if (emailStatus === "taken") {
+      setEmailStatus("idle");
+    }
   };
 
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,7 +237,9 @@ export default function WaitlistSection() {
         handleStatus === "taken" ||
         handleStatus === "reserved" ||
         handleStatus === "checking")) ||
-    !email;
+    !email ||
+    emailStatus === "taken" ||
+    emailStatus === "checking";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -198,6 +256,11 @@ export default function WaitlistSection() {
 
     if (!email) {
       setErrorMsg("Please enter your email address.");
+      return;
+    }
+
+    if (emailStatus === "taken") {
+      setErrorMsg("This email is already registered. Only one pass is permitted per email address.");
       return;
     }
 
@@ -385,9 +448,33 @@ export default function WaitlistSection() {
 
           {/* Email Input */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-mono-mechanical uppercase tracking-wider text-[#1A1815] font-semibold">
-              {!isFoundingCapped ? "2. Your Primary Email" : "1. Your Primary Email"}
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-mono-mechanical uppercase tracking-wider text-[#1A1815] font-semibold">
+                {!isFoundingCapped ? "2. Your Primary Email" : "1. Your Primary Email"}
+              </label>
+              {/* Real-time Status Verification Indicator */}
+              <div className="text-xs font-mono-mechanical">
+                {emailStatus === "checking" && (
+                  <span className="inline-flex items-center gap-1 text-[#6E675F]">
+                    <Loader2 className="w-3 h-3 animate-spin text-[#C86428]" />
+                    <span>Checking...</span>
+                  </span>
+                )}
+                {emailStatus === "available" && (
+                  <span className="inline-flex items-center gap-1 text-[#15803D] font-bold">
+                    <Check className="w-3.5 h-3.5" />
+                    <span>[AVAILABLE]</span>
+                  </span>
+                )}
+                {emailStatus === "taken" && (
+                  <span className="inline-flex items-center gap-1 text-[#DC2626] font-semibold">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    <span>This email has already claimed a pass.</span>
+                  </span>
+                )}
+              </div>
+            </div>
+
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C86428]">
                 <Mail className="w-4 h-4" />
@@ -396,20 +483,40 @@ export default function WaitlistSection() {
                 type="email"
                 required
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setErrorMsg("");
-                }}
+                onChange={handleEmailChange}
                 placeholder="name@domain.com"
                 id="waitlist-email-input"
-                className="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-[#F9F6F0] border border-[#E8E1D3] text-sm font-mono-mechanical text-[#1A1815] placeholder:text-[#9C9488] focus:outline-none focus:border-[#C86428] focus:bg-[#FFFFFF] transition-all"
+                className={`w-full pl-10 pr-10 py-3.5 rounded-2xl bg-[#F9F6F0] border text-sm font-mono-mechanical text-[#1A1815] placeholder:text-[#9C9488] focus:outline-none transition-all ${
+                  emailStatus === "taken"
+                    ? "border-[#DC2626] bg-[#FEF2F2] focus:border-[#DC2626]"
+                    : emailStatus === "available"
+                    ? "border-[#15803D] bg-[#F0FDF4] focus:border-[#15803D]"
+                    : "border-[#E8E1D3] focus:border-[#C86428] focus:bg-[#FFFFFF]"
+                }`}
               />
+              {/* Right side icon */}
+              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+                {emailStatus === "available" && (
+                  <CheckCircle2 className="w-4 h-4 text-[#15803D]" />
+                )}
+                {emailStatus === "taken" && (
+                  <AlertCircle className="w-4 h-4 text-[#DC2626]" />
+                )}
+              </div>
             </div>
-            <p className="text-[10px] font-mono-mechanical text-[#9C9488]">
-              {!isFoundingCapped
-                ? "We will send your VIP golden ticket and darkroom onboarding invite here."
-                : "We will notify you immediately when batch #02 queue invites open."}
-            </p>
+
+            {emailStatus === "taken" ? (
+              <p className="text-[10px] font-mono-mechanical text-[#DC2626] flex items-center gap-1 font-semibold">
+                <AlertCircle className="w-3 h-3 shrink-0" />
+                <span>This email has already claimed a pass. Only one pass is permitted per email address.</span>
+              </p>
+            ) : (
+              <p className="text-[10px] font-mono-mechanical text-[#9C9488]">
+                {!isFoundingCapped
+                  ? "We will send your VIP golden ticket and darkroom onboarding invite here."
+                  : "We will notify you immediately when batch #02 queue invites open."}
+              </p>
+            )}
           </div>
 
           {/* Invite / Referral Code (Strictly Optional) */}

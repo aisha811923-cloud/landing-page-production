@@ -104,20 +104,14 @@ export async function joinWaitlistAction(
       // 2. Check if user with this email already exists
       const { data: existingUserByEmail } = await supabase
         .from("waitlist")
-        .select("id, email, handle, position, referral_code, referral_count, roll_capacity_preference")
+        .select("id, email, handle, position")
         .eq("email", email)
         .maybeSingle();
 
       if (existingUserByEmail) {
         return {
-          success: true,
-          message: "Welcome back! Here is your active pass.",
-          position: existingUserByEmail.position,
-          handle: existingUserByEmail.handle,
-          isFoundingMember: existingUserByEmail.position <= 100,
-          referralCode: existingUserByEmail.referral_code,
-          referralCount: existingUserByEmail.referral_count,
-          rollPreference: existingUserByEmail.roll_capacity_preference,
+          success: false,
+          message: "This email is already registered. Only one pass is permitted per email address.",
         };
       }
 
@@ -129,10 +123,10 @@ export async function joinWaitlistAction(
           .eq("handle", handle)
           .maybeSingle();
 
-        if (existingUserByHandle && existingUserByHandle.email !== email) {
+        if (existingUserByHandle) {
           return {
             success: false,
-            message: `@${handle} is already permanently claimed. Please choose another handle.`,
+            message: `@${handle} is already claimed. Please pick another.`,
           };
         }
       }
@@ -179,34 +173,24 @@ export async function joinWaitlistAction(
         .single();
 
       if (insertError) {
-        // Check for PostgreSQL 23505 unique violation
+        // Check for PostgreSQL 23505 unique constraint violation
         if (insertError.code === "23505" || insertError.message?.includes("duplicate key")) {
-          if (insertError.message?.includes("handle")) {
+          if (insertError.message?.includes("email") || (insertError as any).details?.includes("email")) {
             return {
               success: false,
-              message: `@${handle} is already permanently claimed. Please choose another handle.`,
+              message: "This email is already registered. Only one pass is permitted per email address.",
             };
           }
-          if (insertError.message?.includes("email")) {
-            const { data: existingUser } = await supabase
-              .from("waitlist")
-              .select("position, handle, referral_code, referral_count, roll_capacity_preference")
-              .eq("email", email)
-              .maybeSingle();
-
-            if (existingUser) {
-              return {
-                success: true,
-                message: "Welcome back! Here is your active pass.",
-                position: existingUser.position,
-                handle: existingUser.handle,
-                isFoundingMember: existingUser.position <= 100,
-                referralCode: existingUser.referral_code,
-                referralCount: existingUser.referral_count,
-                rollPreference: existingUser.roll_capacity_preference,
-              };
-            }
+          if (insertError.message?.includes("handle") || (insertError as any).details?.includes("handle")) {
+            return {
+              success: false,
+              message: `@${handle} is already claimed. Please pick another.`,
+            };
           }
+          return {
+            success: false,
+            message: "This email is already registered. Only one pass is permitted per email address.",
+          };
         }
 
         console.warn("Supabase insert fallback notice:", insertError.message);
